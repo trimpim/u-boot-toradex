@@ -116,9 +116,10 @@
 #define CONFIG_MXC_GPIO
 
 /* Framebuffer and LCD */
+#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
+#ifdef CONFIG_VIDEO
 #define CONFIG_VIDEO_IPUV3
 #define CONFIG_SYS_CONSOLE_IS_IN_ENV
-#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
 #define CONFIG_VIDEO_BMP_RLE8
 #define CONFIG_SPLASH_SCREEN
 #define CONFIG_SPLASH_SCREEN_ALIGN
@@ -131,6 +132,7 @@
 #define CONFIG_IMX_HDMI
 #define CONFIG_IMX_VIDEO_SKIP
 #define CONFIG_CMD_BMP
+#endif /* CONFIG_VIDEO */
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
@@ -152,10 +154,19 @@
 #define CONFIG_LOADADDR			0x12000000
 #define CONFIG_SYS_TEXT_BASE		0x17800000
 
+#ifdef CONFIG_TDX_EASY_INSTALLER
+#define CONFIG_BOOTCOMMAND "run distro_bootcmd"
+#else
+#define CONFIG_BOOTCOMMAND "run emmcboot; echo; echo emmcboot failed; " \
+		"run distro_bootcmd; usb start; " \
+		"setenv stdout serial,vga; setenv stdin serial,usbkbd"
+#endif
+
 #ifndef CONFIG_SPL_BUILD
 #define BOOTENV_RUN_NET_USB_START ""
 #define BOOT_TARGET_DEVICES(func) \
         func(MMC, mmc, 1) \
+        func(MMC, mmc, 0) \
         func(USB, usb, 0) \
         func(DHCP, dhcp, na)
 #include <config_distro_bootcmd.h>
@@ -188,7 +199,6 @@
 #define MEM_LAYOUT_ENV_SETTINGS \
 	"bootm_size=0x10000000\0" \
 	"fdt_addr_r=0x12000000\0" \
-	"fdt_high=0xffffffff\0" \
 	"initrd_high=0xffffffff\0" \
 	"kernel_addr_r=0x11000000\0" \
 	"pxefile_addr_r=0x17100000\0" \
@@ -231,10 +241,6 @@
 #define FDT_FILE "imx6dl-colibri-eval-v3.dtb"
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	BOOTENV \
-	"bootcmd=run emmcboot ; echo ; echo emmcboot failed ; " \
-		"run distro_bootcmd ; " \
-		"usb start ;" \
-		"setenv stdout serial,vga ; setenv stdin serial,usbkbd\0" \
 	"boot_file=zImage\0" \
 	"console=ttymxc0\0" \
 	"defargs=galcore.contiguousSize=50331648 user_debug=30\0" \
@@ -297,7 +303,11 @@
 
 #define CONFIG_ENV_SIZE			(8 * 1024)
 
+#ifdef CONFIG_TDX_EASY_INSTALLER
+#define CONFIG_ENV_IS_NOWHERE
+#else
 #define CONFIG_ENV_IS_IN_MMC
+#endif
 
 #if defined(CONFIG_ENV_IS_IN_MMC)
 /* Environment in eMMC, before config block at the end of 1st "boot sector" */
