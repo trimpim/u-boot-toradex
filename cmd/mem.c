@@ -870,6 +870,7 @@ static ulong mem_test_alt(vu_long *buf, ulong start_addr, ulong end_addr,
 		addr[test_offset] = pattern;
 	}
 
+#ifdef CONFIG_TDX_EASY_INSTALLER
 	/*
 	 * Description: Test the integrity of a physical
 	 *		memory device by performing an
@@ -930,6 +931,7 @@ static ulong mem_test_alt(vu_long *buf, ulong start_addr, ulong end_addr,
 		}
 		addr[offset] = 0;
 	}
+#endif /* CONFIG_TDX_EASY_INSTALLER */
 
 	return errs;
 }
