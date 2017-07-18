@@ -7,7 +7,26 @@
 #include <common.h>
 #include <exports.h>
 
+/*
+ * Make thumb work by compiling the entry function for arm.
+ * Only do this if the target CPU is able to execute arm code.
+ * Note that code which calls back into the U-Boot binary
+ * must be compiled for thumb.
+ */
+#if defined(__thumb__) && defined(__ARM_ARCH_ISA_ARM)
+static int _hello_world(int argc, char * const argv[]);
+
+__attribute__((target("arm")))
+int hello_world(int argc, char * const argv[])
+{
+	return _hello_world(argc, argv);
+}
+
+static noinline int _hello_world(int argc, char * const argv[])
+#else
+
 int hello_world (int argc, char * const argv[])
+#endif
 {
 	int i;
 
