@@ -8,6 +8,14 @@
 #include <exports.h>
 
 /*
+ * add at least one variable. Without this at least in some cases the
+ * standalone application sometimes freezes, sometimes it prints 'random'
+ * stuff with printf ...
+ * I assume that this forces alignment of some linker sections.
+ */
+int dummy_var_in_text = 1;
+
+/*
  * Make thumb work by compiling the entry function for arm.
  * Only do this if the target CPU is able to execute arm code.
  * Note that code which calls back into the U-Boot binary
