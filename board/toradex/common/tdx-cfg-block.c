@@ -92,6 +92,11 @@ const char * const toradex_modules[] = {
 	[33] = "Colibri iMX7 Dual 512MB",
 	[34] = "Apalis TK1 2GB",
 	[35] = "Apalis iMX6 Dual 1GB IT",
+	[36] = "Colibri iMX6ULL 256MB",
+	[37] = "Apalis iMX8",
+	[38] = "UNKNOWN MODULE",
+	[39] = "Colibri iMX7 Dual 1GB",
+	[40] = "Colibri iMX6ULL 512MB Wi-Fi / Bluetooth IT",
 };
 
 #ifdef CONFIG_TDX_CFG_BLOCK_IS_IN_MMC
@@ -293,13 +298,17 @@ static int get_cfgblock_interactive(void)
 		if (it == 'y' || it == 'Y')
 			if (is_cpu_type(MXC_CPU_MX6DL))
 				tdx_hw_tag.prodid = COLIBRI_IMX6DL_IT;
-			else
+			else if (is_cpu_type(MXC_CPU_MX6SOLO))
 				tdx_hw_tag.prodid = COLIBRI_IMX6S_IT;
+			else
+				tdx_hw_tag.prodid = COLIBRI_IMX6ULL_WIFI_BT_IT;
 		else
 			if (is_cpu_type(MXC_CPU_MX6DL))
 				tdx_hw_tag.prodid = COLIBRI_IMX6DL;
-			else
+			else if (is_cpu_type(MXC_CPU_MX6SOLO))
 				tdx_hw_tag.prodid = COLIBRI_IMX6S;
+			else
+				tdx_hw_tag.prodid = COLIBRI_IMX6ULL;
 #endif /* CONFIG_MACH_TYPE */
 	} else if (!strcmp("imx7d", soc)) {
 		tdx_hw_tag.prodid = COLIBRI_IMX7D;
