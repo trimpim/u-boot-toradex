@@ -50,7 +50,12 @@ DECLARE_GLOBAL_DATA_PTR;
 
 #define NAND_PAD_READY0_CTRL (PAD_CTL_DSE_3P3V_49OHM | PAD_CTL_PUS_PU5KOHM)
 
+#define FLASH_DETECTION_CTRL (PAD_CTL_HYS | PAD_CTL_PUE)
+
 #define USB_CDET_GPIO	IMX_GPIO_NR(7, 14)
+#define FLASH_DET_GPIO	IMX_GPIO_NR(6, 11)
+
+static bool is_emmc;
 
 int dram_init(void)
 {
@@ -79,6 +84,10 @@ static iomux_v3_cfg_t const usdhc1_pads[] = {
 
 static iomux_v3_cfg_t const usb_cdet_pads[] = {
 	MX7D_PAD_ENET1_CRS__GPIO7_IO14 | MUX_PAD_CTRL(NO_PAD_CTRL),
+};
+
+static iomux_v3_cfg_t const flash_detection_pads[] = {
+	MX7D_PAD_SD3_RESET_B__GPIO6_IO11 | MUX_PAD_CTRL(FLASH_DETECTION_CTRL),
 };
 
 #if defined(CONFIG_NAND_MXS) && defined(CONFIG_TARGET_COLIBRI_IMX7_NAND)
@@ -333,6 +342,16 @@ int board_init(void)
 	/* address of boot parameters */
 	gd->bd->bi_boot_params = PHYS_SDRAM + 0x100;
 
+	/*
+	 * Enable GPIO on NAND_WE_B/eMMC_RST with 100k pull-down. eMMC_RST
+	 * is pulled high with 4.7k for eMMC devices. This allows to reliably
+	 * detect eMMC/NAND flash
+	 */
+	imx_iomux_v3_setup_multiple_pads(flash_detection_pads, ARRAY_SIZE(flash_detection_pads));
+	gpio_request(FLASH_DET_GPIO, "flash-detection-gpio");
+	is_emmc = gpio_get_value(FLASH_DET_GPIO);
+	gpio_free(FLASH_DET_GPIO);
+
 #ifdef CONFIG_FEC_MXC
 	setup_fec();
 #endif
@@ -372,6 +391,9 @@ int board_late_init(void)
 #ifdef CONFIG_CMD_BMODE
 	add_board_boot_modes(board_boot_modes);
 #endif
+
+	if (is_emmc)
+		setenv("variant", "-emmc");
 
 #ifdef CONFIG_CMD_USB_SDP
 	if (get_boot_device() == USB_SDP_BOOT) {
@@ -469,8 +491,10 @@ int ft_board_setup(void *blob, bd_t *bd)
 	};
 
 	/* Update partition nodes using info from mtdparts env var */
-	puts("   Updating MTD partitions...\n");
-	fdt_fixup_mtdparts(blob, nodes, ARRAY_SIZE(nodes));
+	if (!is_emmc) {
+		puts("   Updating MTD partitions...\n");
+		fdt_fixup_mtdparts(blob, nodes, ARRAY_SIZE(nodes));
+	}
 #endif
 #if defined(CONFIG_IMX_BOOTAUX)
 	ret = arch_auxiliary_core_check_up(0);
