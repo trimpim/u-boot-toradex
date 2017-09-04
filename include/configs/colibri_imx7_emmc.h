@@ -81,7 +81,6 @@
 #define MEM_LAYOUT_ENV_SETTINGS \
 	"bootm_size=0x10000000\0" \
 	"fdt_addr_r=0x82000000\0" \
-	"fdt_high=0xffffffff\0" \
 	"initrd_high=0xffffffff\0" \
 	"kernel_addr_r=0x81000000\0" \
 	"pxefile_addr_r=0x87100000\0" \
@@ -106,12 +105,17 @@
 	"load mmc 1:1 ${fdt_addr_r} ${soc}-colibri-emmc-${fdt_board}.dtb && " \
 	"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0" \
 
-#define CONFIG_BOOTCOMMAND "run emmcboot ; echo ; echo emmcboot failed ; " \
-	"setenv fdtfile ${soc}-colibri-emmc-${fdt_board}.dtb && run distro_bootcmd;"
+#ifdef CONFIG_TDX_EASY_INSTALLER
+#define CONFIG_BOOTCOMMAND "run distro_bootcmd"
+#else
+#define CONFIG_BOOTCOMMAND "run emmcboot; echo; echo emmcboot failed; " \
+	"setenv fdtfile ${soc}-colibri-emmc-${fdt_board}.dtb && run distro_bootcmd"
+#endif
 
 #define BOOTENV_RUN_NET_USB_START ""
 #define BOOT_TARGET_DEVICES(func) \
 	func(MMC, mmc, 1) \
+	func(MMC, mmc, 0) \
 	func(USB, usb, 0) \
 	func(DHCP, dhcp, na)
 #include <config_distro_bootcmd.h>
@@ -181,7 +185,11 @@
 
 #define CONFIG_ENV_SIZE			(8 * 1024)
 
+#ifdef CONFIG_TDX_EASY_INSTALLER
+#define CONFIG_ENV_IS_NOWHERE
+#else
 #define CONFIG_ENV_IS_IN_MMC
+#endif
 
 #if defined(CONFIG_ENV_IS_IN_MMC)
 /* Environment in eMMC, before config block at the end of 1st "boot sector" */
