@@ -69,7 +69,6 @@
 #define MEM_LAYOUT_ENV_SETTINGS \
 	"bootm_size=0x10000000\0" \
 	"fdt_addr_r=0x82000000\0" \
-	"fdt_high=0xffffffff\0" \
 	"initrd_high=0xffffffff\0" \
 	"kernel_addr_r=0x81000000\0" \
 	"pxefile_addr_r=0x87100000\0" \
@@ -93,6 +92,18 @@
 	"load mmc 0:1 ${fdt_addr_r} " FDT_FILE " && " \
 	"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0" \
 
+#ifdef CONFIG_TDX_EASY_INSTALLER
+#define UBI_BOOTCMD \
+	"ubiargs=ubi.mtd=ubi root=ubi0:rootfs rw rootfstype=ubifs " \
+		"ubi.fm_autoconvert=1\0" \
+	"ubiboot=run setup; " \
+		"setenv bootargs console=ttymxc0,115200 quiet " \
+		"rootfstype=squashfs root=/dev/ram autoinstall " \
+		"${teziargs}; echo Booting Toradex Easy Installer...; " \
+		"ubi part ubi && " \
+		"ubi read ${ramdisk_addr_r} rootfs && " \
+		"bootm ${ramdisk_addr_r}\0"
+#else /* CONFIG_TDX_EASY_INSTALLER */
 #define UBI_BOOTCMD \
 	"ubiargs=ubi.mtd=ubi root=ubi0:rootfs rw rootfstype=ubifs " \
 		"ubi.fm_autoconvert=1\0" \
@@ -102,10 +113,16 @@
 		"ubi part ubi &&" \
 		"ubi read ${kernel_addr_r} kernel && " \
 		"ubi read ${fdt_addr_r} dtb && " \
-		"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0" \
+		"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0"
+#endif /* CONFIG_TDX_EASY_INSTALLER */
 
+#ifdef CONFIG_TDX_EASY_INSTALLER
+#define CONFIG_BOOTCOMMAND "setenv fdtfile " FDT_FILE " && " \
+	"run bootcmd_mmc0; run ubiboot; run distro_bootcmd"
+#else
 #define CONFIG_BOOTCOMMAND "run ubiboot; " \
-	"setenv fdtfile " FDT_FILE " && run distro_bootcmd;"
+	"setenv fdtfile " FDT_FILE " && run distro_bootcmd"
+#endif
 
 #define BOOTENV_RUN_NET_USB_START ""
 #define BOOT_TARGET_DEVICES(func) \
@@ -177,12 +194,18 @@
 
 /* FLASH and environment organization */
 #define CONFIG_SYS_NO_FLASH
+#ifdef CONFIG_TDX_EASY_INSTALLER
+#define CONFIG_ENV_IS_NOWHERE
+#else
 #define CONFIG_ENV_IS_IN_NAND
+#endif
 
 #if defined(CONFIG_ENV_IS_IN_NAND)
 #define CONFIG_ENV_SECT_SIZE		(128 * 1024)
 #define CONFIG_ENV_OFFSET		(28 * CONFIG_ENV_SECT_SIZE)
 #define CONFIG_ENV_SIZE			CONFIG_ENV_SECT_SIZE
+#else
+#define CONFIG_ENV_SIZE			(8 * 1024)
 #endif
 
 #define CONFIG_NAND_MXS
