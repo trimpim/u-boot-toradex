@@ -94,6 +94,7 @@
 
 /* Miscellaneous commands */
 
+#if !defined(CONFIG_SPL_BUILD)
 /* Framebuffer and LCD */
 #define CONFIG_VIDEO_IPUV3
 #define CONFIG_SYS_CONSOLE_IS_IN_ENV
@@ -107,6 +108,7 @@
 #define CONFIG_CONSOLE_MUX
 #define CONFIG_IMX_HDMI
 #define CONFIG_IMX_VIDEO_SKIP
+#endif
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
