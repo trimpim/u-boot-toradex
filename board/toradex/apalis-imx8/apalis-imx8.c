@@ -55,14 +55,14 @@ DECLARE_GLOBAL_DATA_PTR;
 #define UART_PAD_CTRL	((SC_PAD_CONFIG_OUT_IN << PADRING_CONFIG_SHIFT) | (SC_PAD_ISO_OFF << PADRING_LPCONFIG_SHIFT) \
 						| (SC_PAD_28FDSOI_DSE_DV_HIGH << PADRING_DSE_SHIFT) | (SC_PAD_28FDSOI_PS_PU << PADRING_PULL_SHIFT))
 
-static iomux_cfg_t uart0_pads[] = {
-	SC_P_UART0_RX | MUX_PAD_CTRL(UART_PAD_CTRL),
-	SC_P_UART0_TX | MUX_PAD_CTRL(UART_PAD_CTRL),
+static iomux_cfg_t uart1_pads[] = {
+	SC_P_UART1_RX | MUX_PAD_CTRL(UART_PAD_CTRL),
+	SC_P_UART1_TX | MUX_PAD_CTRL(UART_PAD_CTRL),
 };
 
 static void setup_iomux_uart(void)
 {
-	imx8_iomux_setup_multiple_pads(uart0_pads, ARRAY_SIZE(uart0_pads));
+	imx8_iomux_setup_multiple_pads(uart1_pads, ARRAY_SIZE(uart1_pads));
 }
 
 int board_early_init_f(void)
@@ -72,19 +72,19 @@ int board_early_init_f(void)
 
 	ipcHndl = gd->arch.ipc_channel_handle;
 
-	/* Power up UART0, this is very early while power domain is not working */
-	sciErr = sc_pm_set_resource_power_mode(ipcHndl, SC_R_UART_0, SC_PM_PW_MODE_ON);
+	/* Power up UART1, this is very early while power domain is not working */
+	sciErr = sc_pm_set_resource_power_mode(ipcHndl, SC_R_UART_1, SC_PM_PW_MODE_ON);
 	if (sciErr != SC_ERR_NONE)
 		return 0;
 
-	/* Set UART0 clock root to 80 MHz */
+	/* Set UART1 clock root to 80 MHz */
 	sc_pm_clock_rate_t rate = 80000000;
-	sciErr = sc_pm_set_clock_rate(ipcHndl, SC_R_UART_0, 2, &rate);
+	sciErr = sc_pm_set_clock_rate(ipcHndl, SC_R_UART_1, 2, &rate);
 	if (sciErr != SC_ERR_NONE)
 		return 0;
 
-	/* Enable UART0 clock root */
-	sciErr = sc_pm_clock_enable(ipcHndl, SC_R_UART_0, 2, true, false);
+	/* Enable UART1 clock root */
+	sciErr = sc_pm_clock_enable(ipcHndl, SC_R_UART_1, 2, true, false);
 	if (sciErr != SC_ERR_NONE)
 		return 0;
 
@@ -420,7 +420,7 @@ int board_init(void)
 void board_quiesce_devices()
 {
 	const char *power_on_devices[] = {
-		"dma_lpuart0",
+		"dma_lpuart1",
 	};
 
 	power_off_pd_devices(power_on_devices, ARRAY_SIZE(power_on_devices));
