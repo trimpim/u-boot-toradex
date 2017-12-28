@@ -71,30 +71,12 @@
 
 #define CONFIG_PHY_GIGE /* Support for 1000BASE-X */
 #define CONFIG_PHYLIB
-#define CONFIG_PHY_ATHEROS
+#define CONFIG_PHY_MICREL
+#define CONFIG_PHY_MICREL_KSZ9031
 
-/* ENET0 connects AR8031 on CPU board, ENET1 connects to base board */
-#define CONFIG_FEC_ENET_DEV 0
-
-#if (CONFIG_FEC_ENET_DEV == 0)
 #define IMX_FEC_BASE			0x5B040000
-#define CONFIG_FEC_MXC_PHYADDR          0x0
-#define CONFIG_ETHPRIME                 "eth0"
-#elif (CONFIG_FEC_ENET_DEV == 1)
-#define IMX_FEC_BASE			0x5B050000
-#define CONFIG_FEC_MXC_PHYADDR          0x1
-#define CONFIG_FEC_ENABLE_MAX7322
-#define CONFIG_ETHPRIME                 "eth1"
-#endif
-
-/* ENET0 MDIO are shared */
-#define CONFIG_FEC_MXC_MDIO_BASE	0x5B040000
-
-/* MAX7322 */
-#ifdef CONFIG_FEC_ENABLE_MAX7322
-#define CONFIG_MAX7322_I2C_ADDR		0x68
-#define CONFIG_MAX7322_I2C_BUS		2 /* I2C2 */
-#endif
+#define CONFIG_FEC_MXC_PHYADDR		7
+#define CONFIG_ETHPRIME			"FEC"
 
 /* Boot M4 */
 #define M4_BOOT_ENV \
