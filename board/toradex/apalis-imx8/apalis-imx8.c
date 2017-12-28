@@ -13,7 +13,6 @@
 #include <environment.h>
 #include <fsl_esdhc.h>
 #include <i2c.h>
-#include "pca953x.h"
 
 #include <asm/io.h>
 #include <asm/gpio.h>
