@@ -248,12 +248,6 @@
 /* Generic Timer Definitions */
 #define COUNTER_FREQUENCY		8000000	/* 8MHz */
 
-#ifndef CONFIG_DM_PCA953X
-#define CONFIG_PCA953X
-#define CONFIG_CMD_PCA953X
-#define CONFIG_CMD_PCA953X_INFO
-#endif
-
 #define CONFIG_IMX_SMMU
 
 /* MT35XU512ABA1G12 has only one Die, so QSPI0 B won't work */
