@@ -1,7 +1,7 @@
 if ARCH_MX6
 
 config MX6
-	select GPT_TIMER
+	select GPT_TIMER if !MX6UL && !MX6ULL
 	bool
 	default y
 
@@ -30,6 +30,7 @@ config MX6SX
 config MX6UL
 	select SYS_L2CACHE_OFF
 	select ROM_UNIFIED_SECTIONS
+	select SYSCOUNTER_TIMER
 	bool
 
 config MX6ULL
