@@ -85,7 +85,7 @@
 #define DFU_ALT_EMMC_INFO	"colibri_t30.img raw 0x0 0x500 mmcpart 1; " \
 				"boot part 0 1 mmcpart 0; " \
 				"rootfs part 0 2 mmcpart 0; " \
-				"uImage fat 0 1 mmcpart 0; " \
+				"zImage fat 0 1 mmcpart 0; " \
 				"tegra30-colibri-eval-v3.dtb fat 0 1 mmcpart 0"
 
 #define EMMC_BOOTCMD \
@@ -95,7 +95,7 @@
 		"${setupargs} ${vidargs}; echo Booting from internal eMMC " \
 		"chip...; run emmcdtbload; load mmc 0:1 ${kernel_addr_r} " \
 		"${boot_file} && run fdt_fixup && " \
-		"bootm ${kernel_addr_r} - ${dtbparam}\0" \
+		"bootz ${kernel_addr_r} - ${dtbparam}\0" \
 	"emmcdtbload=setenv dtbparam; load mmc 0:1 ${fdt_addr_r} " \
 		"${soc}-colibri-${fdt_board}.dtb && " \
 		"setenv dtbparam ${fdt_addr_r}\0"
@@ -105,7 +105,7 @@
 	"nfsboot=usb start; run setup; setenv bootargs ${defargs} ${nfsargs} " \
 		"${setupargs} ${vidargs}; echo Booting via DHCP/TFTP/NFS...; " \
 		"run nfsdtbload; dhcp ${kernel_addr_r} " \
-		"&& run fdt_fixup && bootm ${kernel_addr_r} - ${dtbparam}\0" \
+		"&& run fdt_fixup && bootz ${kernel_addr_r} - ${dtbparam}\0" \
 	"nfsdtbload=setenv dtbparam; tftp ${fdt_addr_r} " \
 		"${soc}-colibri-${fdt_board}.dtb " \
 		"&& setenv dtbparam ${fdt_addr_r}\0"
@@ -117,7 +117,7 @@
 		"${vidargs}; echo Booting from SD card in 8bit slot...; " \
 		"run sddtbload; load mmc 1:1 ${kernel_addr_r} " \
 		"${boot_file} && run fdt_fixup && " \
-		"bootm ${kernel_addr_r} - ${dtbparam}\0" \
+		"bootz ${kernel_addr_r} - ${dtbparam}\0" \
 	"sddtbload=setenv dtbparam; load mmc 1:1 ${fdt_addr_r} " \
 		"${soc}-colibri-${fdt_board}.dtb " \
 		"&& setenv dtbparam ${fdt_addr_r}\0"
@@ -129,13 +129,13 @@
 		"${usbargs} ${vidargs}; echo Booting from USB stick...; " \
 		"usb start && run usbdtbload; load usb 0:1 ${kernel_addr_r} " \
 		"${boot_file} && run fdt_fixup && " \
-		"bootm ${kernel_addr_r} - ${dtbparam}\0" \
+		"bootz ${kernel_addr_r} - ${dtbparam}\0" \
 	"usbdtbload=setenv dtbparam; load usb 0:1 ${fdt_addr_r} " \
 		"${soc}-colibri-${fdt_board}.dtb " \
 		"&& setenv dtbparam ${fdt_addr_r}\0"
 
 #define BOARD_EXTRA_ENV_SETTINGS \
-	"boot_file=uImage\0" \
+	"boot_file=zImage\0" \
 	"console=ttyS0\0" \
 	"defargs=core_edp_mv=1300 usb_high_speed=1 user_debug=30\0" \
 	"dfu_alt_info=" DFU_ALT_EMMC_INFO "\0" \
