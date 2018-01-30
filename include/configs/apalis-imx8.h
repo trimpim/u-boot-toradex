@@ -199,11 +199,9 @@
 
 #define CONFIG_SYS_MMC_IMG_LOAD_PART	1
 
-/* On LPDDR4 board, USDHC1 is for eMMC, USDHC2 is for SD on CPU board, USDHC3 is for SD on base board
-  * On DDR4 board, USDHC1 is mux for NAND, USDHC2 is for SD, USDHC3 is for SD on base board
-  */
-#define CONFIG_SYS_MMC_ENV_DEV		1   /* USDHC2 */
-#define CONFIG_MMCROOT			"/dev/mmcblk1p2"  /* USDHC2 */
+/* On Apalis iMX8 USDHC1 is eMMC, USDHC2 is 8-bit SD and USDHC3 is 4-bit SD */
+#define CONFIG_SYS_MMC_ENV_DEV		0   /* USDHC1 eMMC */
+#define CONFIG_MMCROOT			"/dev/mmcblk0p2"  /* USDHC1 eMMC */
 #define CONFIG_SYS_FSL_USDHC_NUM	3
 
 /* Size of malloc() pool */
