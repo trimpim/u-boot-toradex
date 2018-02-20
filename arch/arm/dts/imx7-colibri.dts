@@ -48,6 +48,21 @@
 	status = "okay";
 };
 
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart2>;
+	fsl,uart-has-rtscts;
+	fsl,dte-mode;
+	status = "okay";
+};
+
+&uart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart3>;
+	fsl,dte-mode;
+	status = "okay";
+};
+
 &iomuxc {
 	pinctrl_i2c4: i2c4-grp {
 		fsl,pins = <
@@ -76,6 +91,22 @@
 		fsl,pins = <
 			MX7D_PAD_SD2_DATA1__GPIO5_IO15		0x14 /* DCD */
 			MX7D_PAD_SD2_DATA0__GPIO5_IO14		0x14 /* DTR */
+		>;
+	};
+
+	pinctrl_uart2: uart2grp {
+		fsl,pins = <
+			MX7D_PAD_UART2_TX_DATA__UART2_DTE_RX 0x79
+			MX7D_PAD_UART2_RX_DATA__UART2_DTE_TX 0x79
+			MX7D_PAD_SAI2_RX_DATA__UART2_DTE_RTS 0x79
+			MX7D_PAD_SAI2_TX_DATA__UART2_DTE_CTS 0x79
+		>;
+	};
+
+	pinctrl_uart3: uart3-grp {
+		fsl,pins = <
+			MX7D_PAD_UART3_TX_DATA__UART3_DTE_RX	0x79
+			MX7D_PAD_UART3_RX_DATA__UART3_DTE_TX	0x79
 		>;
 	};
 };
