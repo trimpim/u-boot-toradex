@@ -280,7 +280,7 @@
 		"source ${loadaddr}\0" \
 	"setup=setenv setupargs fec_mac=${ethaddr} " \
 		"consoleblank=0 no_console_suspend=1 console=tty1 " \
-		"console=${console},${baudrate}n8\0 " \
+		"console=${console},${baudrate}n8\0" \
 	"setupdate=run setsdupdate || run setusbupdate || run setethupdate\0" \
 	"setusbupdate=usb start && setenv interface usb; setenv drive 0; " \
 		"load ${interface} ${drive}:1 ${loadaddr} flash_blk.img && " \
@@ -289,7 +289,7 @@
 	"vidargs=mxc_hdmi.only_cea=1 " \
 		"video=mxcfb0:dev=hdmi,1920x1080M@60,if=RGB24 " \
 		"video=mxcfb1:off video=mxcfb2:off video=mxcfb3:off " \
-		"fbmem=32M\0 "
+		"fbmem=32M\0"
 
 /* Miscellaneous configurable options */
 #define CONFIG_SYS_LONGHELP
