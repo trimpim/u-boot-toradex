@@ -14,6 +14,9 @@
 #include <asm/gpio.h>
 #include <asm/io.h>
 #include <i2c.h>
+#include <jffs2/load_kernel.h>
+#include <fdt_support.h>
+#include <mtd_node.h>
 #include <nand.h>
 #include "../common/tdx-common.h"
 
@@ -134,6 +137,16 @@ int checkboard(void)
 #if defined(CONFIG_OF_LIBFDT) && defined(CONFIG_OF_BOARD_SETUP)
 int ft_board_setup(void *blob, bd_t *bd)
 {
+#if defined(CONFIG_FDT_FIXUP_PARTITIONS)
+	static struct node_info nodes[] = {
+		{ "nvidia,tegra20-nand", MTD_DEV_TYPE_NAND, }, /* NAND flash */
+	};
+
+	/* Update partition nodes using info from mtdparts env var */
+	puts("   Updating MTD partitions...\n");
+	fdt_fixup_mtdparts(blob, nodes, ARRAY_SIZE(nodes));
+#endif
+
 	return ft_common_board_setup(blob, bd);
 }
 #endif
