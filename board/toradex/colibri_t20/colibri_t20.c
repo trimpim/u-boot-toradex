@@ -142,7 +142,7 @@ int ft_board_setup(void *blob, bd_t *bd)
 	/* MAC addr */
 	if (eth_getenv_enetaddr("ethaddr", enetaddr)) {
 		int err = fdt_find_and_setprop(blob,
-				     "/usb@7d004000/asix@1",
+				     "/usb@c5004000/asix@1",
 				     "local-mac-address", enetaddr, 6, 0);
 
 		if (err >= 0)
