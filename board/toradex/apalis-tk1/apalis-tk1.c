@@ -10,6 +10,7 @@
 #include <asm/io.h>
 #include <asm/arch/gpio.h>
 #include <asm/arch/pinmux.h>
+#include <fdt_support.h>
 #include <pci_tegra.h>
 #include <power/as3722.h>
 
@@ -81,6 +82,18 @@ int checkboard(void)
 #if defined(CONFIG_OF_LIBFDT) && defined(CONFIG_OF_BOARD_SETUP)
 int ft_board_setup(void *blob, bd_t *bd)
 {
+	uint8_t enetaddr[6];
+
+	/* MAC addr */
+	if (eth_getenv_enetaddr("ethaddr", enetaddr)) {
+		int err = fdt_find_and_setprop(blob,
+				     "/pcie@1003000/pci@2,0/pcie@0",
+				     "local-mac-address", enetaddr, 6, 0);
+
+		if (err >= 0)
+			puts("   MAC address updated...\n");
+	}
+
 	return ft_common_board_setup(blob, bd);
 }
 #endif

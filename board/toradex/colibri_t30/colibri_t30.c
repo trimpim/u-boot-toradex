@@ -12,6 +12,7 @@
 #include <asm/gpio.h>
 #include <asm/io.h>
 #include <i2c.h>
+#include <fdt_support.h>
 #include "pinmux-config-colibri_t30.h"
 #include "../common/tdx-common.h"
 
@@ -36,6 +37,18 @@ int checkboard(void)
 #if defined(CONFIG_OF_LIBFDT) && defined(CONFIG_OF_BOARD_SETUP)
 int ft_board_setup(void *blob, bd_t *bd)
 {
+	uint8_t enetaddr[6];
+
+	/* MAC addr */
+	if (eth_getenv_enetaddr("ethaddr", enetaddr)) {
+		int err = fdt_find_and_setprop(blob,
+				     "/usb@7d004000/asix@1",
+				     "local-mac-address", enetaddr, 6, 0);
+
+		if (err >= 0)
+			puts("   MAC address updated...\n");
+	}
+
 	return ft_common_board_setup(blob, bd);
 }
 #endif
