@@ -73,10 +73,24 @@
 #define CONFIG_PHYLIB
 #define CONFIG_PHY_MICREL
 #define CONFIG_PHY_MICREL_KSZ9031
+#define CONFIG_IP_DEFRAG
+#define CONFIG_TFTP_BLOCKSIZE		4096
+#define CONFIG_TFTP_TSIZE
+
+#define CONFIG_IPADDR			192.168.10.2
+#define CONFIG_NETMASK			255.255.255.0
+#define CONFIG_SERVERIP			192.168.10.1
 
 #define IMX_FEC_BASE			0x5B040000
 #define CONFIG_FEC_MXC_PHYADDR		7
 #define CONFIG_ETHPRIME			"FEC"
+
+#define CONFIG_SUPPORT_RAW_INITRD
+
+#define MEM_LAYOUT_ENV_SETTINGS \
+	"fdt_addr_r=0x84000000\0" \
+	"kernel_addr_r=0x82000000\0" \
+	"ramdisk_addr_r=0x84100000\0"
 
 /* Boot M4 */
 #define M4_BOOT_ENV \
@@ -111,6 +125,7 @@
 #define CONFIG_EXTRA_ENV_SETTINGS		\
 	CONFIG_MFG_ENV_SETTINGS \
 	M4_BOOT_ENV \
+	MEM_LAYOUT_ENV_SETTINGS \
 	"script=boot.scr\0" \
 	"image=Image\0" \
 	"panel=NULL\0" \
