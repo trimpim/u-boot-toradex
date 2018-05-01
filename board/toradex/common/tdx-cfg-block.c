@@ -7,7 +7,8 @@
 #include <common.h>
 #include "tdx-cfg-block.h"
 
-#if defined(CONFIG_TARGET_APALIS_IMX6) || defined(CONFIG_TARGET_COLIBRI_IMX6)
+#if defined(CONFIG_TARGET_APALIS_IMX6) || defined(CONFIG_TARGET_COLIBRI_IMX6) \
+ || defined(CONFIG_TARGET_APALIS_IMX8)
 #include <asm/arch/sys_proto.h>
 #else
 #define is_cpu_type(cpu) (0)
@@ -365,6 +366,8 @@ static int get_cfgblock_interactive(void)
 			tdx_hw_tag.prodid = COLIBRI_VF61_IT;
 		else
 			tdx_hw_tag.prodid = COLIBRI_VF61;
+	} else if (is_cpu_type(MXC_CPU_IMX8QM)) {
+		tdx_hw_tag.prodid = APALIS_IMX8QM;
 	} else {
 		printf("Module type not detectable due to unknown SoC\n");
 		return -1;
