@@ -28,6 +28,8 @@
 #include <asm/arch/video_common.h>
 #include <power-domain.h>
 
+#include "../common/tdx-cfg-block.h"
+
 DECLARE_GLOBAL_DATA_PTR;
 
 #define ESDHC_PAD_CTRL	((SC_PAD_CONFIG_NORMAL << PADRING_CONFIG_SHIFT) | (SC_PAD_ISO_OFF << PADRING_LPCONFIG_SHIFT) \
