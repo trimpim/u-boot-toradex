@@ -216,7 +216,7 @@ static void setup_iomux_uart(void)
 
 #ifdef CONFIG_FSL_ESDHC
 
-#define USDHC1_CD_GPIO	IMX_GPIO_NR(1, 0)
+#define USDHC1_CD_GPIO	IMX_GPIO_NR(5, 0)
 
 static struct fsl_esdhc_cfg usdhc_cfg[] = {
 	{USDHC1_BASE_ADDR, 0, 4},
