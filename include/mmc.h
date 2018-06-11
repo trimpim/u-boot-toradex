@@ -530,7 +530,11 @@ static inline bool mmc_is_mode_ddr(enum bus_mode mode)
 
 static inline bool supports_uhs(uint caps)
 {
+#if CONFIG_IS_ENABLED(MMC_UHS_SUPPORT)
 	return (caps & UHS_CAPS) ? true : false;
+#else
+	return false;
+#endif
 }
 
 
