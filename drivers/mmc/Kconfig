@@ -36,6 +36,13 @@ config DM_MMC_OPS
 
 if MMC
 
+config MMC_UHS_SUPPORT
+	bool "enable UHS support"
+	help
+	  The Ultra High Speed (UHS) bus is available on some SDHC and SDXC
+	  cards. The IO voltage must be switchable from 3.3v to 1.8v. The bus
+	  frequency can go up to 208MHz (SDR104)
+
 config SPL_MMC_TINY
 	bool "Tiny MMC framework in SPL"
 	help

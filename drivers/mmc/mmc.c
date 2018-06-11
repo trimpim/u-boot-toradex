@@ -32,7 +32,6 @@ static const unsigned int sd_au_size[] = {
 };
 static int mmc_set_signal_voltage(struct mmc *mmc, uint signal_voltage);
 static void mmc_power_cycle(struct mmc *mmc);
-static int mmc_card_busy(struct mmc *mmc);
 static int mmc_select_mode_and_width(struct mmc *mmc, uint card_caps);
 
 #if CONFIG_IS_ENABLED(MMC_TINY)
@@ -161,11 +160,13 @@ const char *mmc_mode_name(enum bus_mode mode)
 	      [SD_LEGACY]	= "SD Legacy",
 	      [MMC_HS]		= "MMC High Speed (26MHz)",
 	      [SD_HS]		= "SD High Speed (50MHz)",
+#if CONFIG_IS_ENABLED(MMC_UHS_SUPPORT)
 	      [UHS_SDR12]	= "UHS SDR12 (25MHz)",
 	      [UHS_SDR25]	= "UHS SDR25 (50MHz)",
 	      [UHS_SDR50]	= "UHS SDR50 (100MHz)",
 	      [UHS_SDR104]	= "UHS SDR104 (208MHz)",
 	      [UHS_DDR50]	= "UHS DDR50 (50MHz)",
+#endif
 	      [MMC_HS_52]	= "MMC High Speed (52MHz)",
 	      [MMC_DDR_52]	= "MMC DDR52 (52MHz)",
 	      [MMC_HS_200]	= "HS200 (200MHz)",
@@ -486,6 +487,7 @@ static int mmc_go_idle(struct mmc *mmc)
 	return 0;
 }
 
+#if CONFIG_IS_ENABLED(MMC_UHS_SUPPORT)
 static int mmc_switch_voltage(struct mmc *mmc, int signal_voltage)
 {
 	struct mmc_cmd cmd;
@@ -546,6 +548,7 @@ static int mmc_switch_voltage(struct mmc *mmc, int signal_voltage)
 fail:
 	return -EIO;
 }
+#endif
 
 static int sd_send_op_cond(struct mmc *mmc, bool uhs_en)
 {
@@ -612,12 +615,14 @@ static int sd_send_op_cond(struct mmc *mmc, bool uhs_en)
 
 	mmc->ocr = cmd.response[0];
 
+#if CONFIG_IS_ENABLED(MMC_UHS_SUPPORT)
 	if (!(mmc_host_is_spi(mmc)) && (cmd.response[0] & 0x41000000)
 	    == 0x41000000) {
 		err = mmc_switch_voltage(mmc, MMC_SIGNAL_VOLTAGE_180);
 		if (err)
 			return err;
 	}
+#endif
 
 	mmc->high_capacity = ((mmc->ocr & OCR_HCS) == OCR_HCS);
 	mmc->rca = 0;
@@ -1174,7 +1179,9 @@ static int sd_get_capabilities(struct mmc *mmc)
 	ALLOC_CACHE_ALIGN_BUFFER(uint, switch_status, 16);
 	struct mmc_data data;
 	int timeout;
+#if CONFIG_IS_ENABLED(MMC_UHS_SUPPORT)
 	u32 sd3_bus_mode;
+#endif
 
 	mmc->card_caps = MMC_MODE_1BIT;
 
@@ -1257,6 +1264,7 @@ retry_scr:
 		mmc->card_caps |= MMC_CAP(SD_HS);
 
 	/* Version before 3.0 don't support UHS modes */
+#if CONFIG_IS_ENABLED(MMC_UHS_SUPPORT)
 	if (mmc->version < SD_VERSION_3)
 		return 0;
 
@@ -1271,6 +1279,7 @@ retry_scr:
 		mmc->card_caps |= MMC_CAP(UHS_SDR12);
 	if (sd3_bus_mode & SD_MODE_UHS_DDR50)
 		mmc->card_caps |= MMC_CAP(UHS_DDR50);
+#endif
 
 	return 0;
 }
@@ -1454,6 +1463,7 @@ static int mmc_set_vdd(struct mmc *mmc, bool enable)
 	return ret;
 }
 
+#if CONFIG_IS_ENABLED(MMC_UHS_SUPPORT)
 static int mmc_card_busy(struct mmc *mmc)
 {
 	int ret = 0;
@@ -1463,6 +1473,7 @@ static int mmc_card_busy(struct mmc *mmc)
 
 	return ret;
 }
+#endif
 
 static int mmc_set_ios(struct mmc *mmc)
 {
@@ -1568,7 +1579,11 @@ static int sd_select_mode_and_width(struct mmc *mmc, uint card_caps)
 	int err;
 	uint widths[] = {MMC_MODE_4BIT, MMC_MODE_1BIT};
 	const struct mode_width_tuning *mwt;
+#if CONFIG_IS_ENABLED(MMC_UHS_SUPPORT)
 	bool uhs_en = (mmc->ocr & OCR_S18R) ? true : false;
+#else
+	bool uhs_en = false;
+#endif
 	uint caps;
 
 
