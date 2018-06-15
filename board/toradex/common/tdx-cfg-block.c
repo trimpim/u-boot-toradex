@@ -98,6 +98,9 @@ const char * const toradex_modules[] = {
 	[40] = "Colibri iMX6ULL 512MB Wi-Fi / Bluetooth IT",
 	[41] = "Colibri iMX7 Dual 512MB EPDC",
 	[42] = "Apalis TK1 4GB",
+	[43] = "Colibri T20 512MB IT SETEK",
+	[44] = "Colibri iMX6ULL 512MB IT",
+	[45] = "Colibri iMX6ULL 512MB Wi-Fi / Bluetooth",
 };
 
 #ifdef CONFIG_TDX_CFG_BLOCK_IS_IN_MMC
@@ -299,20 +302,35 @@ static int get_cfgblock_interactive(void)
 			else
 				tdx_hw_tag.prodid = APALIS_IMX6D;
 #else
+	char wb = 'n';
 		if (it == 'y' || it == 'Y')
 			if (is_cpu_type(MXC_CPU_MX6DL))
 				tdx_hw_tag.prodid = COLIBRI_IMX6DL_IT;
 			else if (is_cpu_type(MXC_CPU_MX6SOLO))
 				tdx_hw_tag.prodid = COLIBRI_IMX6S_IT;
-			else
-				tdx_hw_tag.prodid = COLIBRI_IMX6ULL_WIFI_BT_IT;
+			else {
+				sprintf(message, "Does the module have WiFi / Bluetooth? [y/N] ");
+				len = cli_readline(message);
+				wb = console_buffer[0];
+				if (wb == 'y' || wb =='Y')
+					tdx_hw_tag.prodid = COLIBRI_IMX6ULL_WIFI_BT_IT;
+				else
+					tdx_hw_tag.prodid = COLIBRI_IMX6ULL_IT;
+			}
 		else
 			if (is_cpu_type(MXC_CPU_MX6DL))
 				tdx_hw_tag.prodid = COLIBRI_IMX6DL;
 			else if (is_cpu_type(MXC_CPU_MX6SOLO))
 				tdx_hw_tag.prodid = COLIBRI_IMX6S;
-			else
-				tdx_hw_tag.prodid = COLIBRI_IMX6ULL;
+			else {
+				sprintf(message, "Does the module have WiFi / Bluetooth? [y/N] ");
+				len = cli_readline(message);
+				wb = console_buffer[0];
+				if (wb == 'y' || wb =='Y')
+					tdx_hw_tag.prodid = COLIBRI_IMX6ULL_WIFI_BT;
+				else
+					tdx_hw_tag.prodid = COLIBRI_IMX6ULL;
+			}
 #endif /* CONFIG_MACH_TYPE */
 	} else if (!strcmp("imx7d", soc)) {
 #ifdef CONFIG_TARGET_COLIBRI_IMX7_EMMC
