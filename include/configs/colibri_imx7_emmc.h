@@ -137,7 +137,7 @@
 		"00:14:2d:00:00:00; fi; tftpboot ${loadaddr} " \
 		"${board}/flash_eth.img && source ${loadaddr}\0" \
 	"setsdupdate=mmc rescan && setenv interface mmc && " \
-		"fatload ${interface} 0:1 ${loadaddr} " \
+		"fatload ${interface} 1:1 ${loadaddr} " \
 		"${board}/flash_blk.img && source ${loadaddr}\0" \
 	"setup=setenv setupargs " \
 		"console=tty1 console=${console}" \
