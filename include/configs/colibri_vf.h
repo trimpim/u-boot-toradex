@@ -131,8 +131,8 @@
 	"sdargs=root=/dev/mmcblk0p2 ro rootwait\0"	\
 	"sdboot=run setup; setenv bootargs ${defargs} ${sdargs} " \
 	"${setupargs} ${vidargs}; echo Booting from MMC/SD card...; " \
-		"load mmc 0:2 ${kernel_addr_r} /boot/${kernel_file} && " \
-		"load mmc 0:2 ${fdt_addr_r} /boot/${soc}-colibri-${fdt_board}.dtb && " \
+		"load mmc 0:1 ${kernel_addr_r} ${kernel_file} && " \
+		"load mmc 0:1 ${fdt_addr_r} ${soc}-colibri-${fdt_board}.dtb && " \
 	"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0" \
 
 #define NFS_BOOTCMD \
