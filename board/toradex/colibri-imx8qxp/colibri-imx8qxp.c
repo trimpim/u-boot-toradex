@@ -52,37 +52,50 @@ DECLARE_GLOBAL_DATA_PTR;
 
 #define UART_PAD_CTRL	((SC_PAD_CONFIG_OUT_IN << PADRING_CONFIG_SHIFT) | (SC_PAD_ISO_OFF << PADRING_LPCONFIG_SHIFT) \
 						| (SC_PAD_28FDSOI_DSE_DV_HIGH << PADRING_DSE_SHIFT) | (SC_PAD_28FDSOI_PS_PU << PADRING_PULL_SHIFT))
-
+#if 0
 static iomux_cfg_t uart0_pads[] = {
 	SC_P_UART0_RX | MUX_PAD_CTRL(UART_PAD_CTRL),
 	SC_P_UART0_TX | MUX_PAD_CTRL(UART_PAD_CTRL),
 };
+#endif
+static iomux_cfg_t uart3_pads[] = {
+	SC_P_FLEXCAN2_RX | MUX_MODE_ALT(2) | MUX_PAD_CTRL(UART_PAD_CTRL),
+	SC_P_FLEXCAN2_TX | MUX_MODE_ALT(2) | MUX_PAD_CTRL(UART_PAD_CTRL),
+};
 
 static void setup_iomux_uart(void)
 {
-	imx8_iomux_setup_multiple_pads(uart0_pads, ARRAY_SIZE(uart0_pads));
+	imx8_iomux_setup_multiple_pads(uart3_pads, ARRAY_SIZE(uart3_pads));
 }
 
 int board_early_init_f(void)
 {
 	sc_ipc_t ipcHndl = 0;
+	sc_pm_clock_rate_t rate;
 	sc_err_t sciErr = 0;
 
 	ipcHndl = gd->arch.ipc_channel_handle;
 
-	/* Power up UART0 */
-	sciErr = sc_pm_set_resource_power_mode(ipcHndl, SC_R_UART_0, SC_PM_PW_MODE_ON);
+	/* This works around that having only UART3 up the baudrate is 1.2M
+	 * instead of 115.2k. Set UART0 clock root to 80 MHz */
+	rate = 80000000;
+	sciErr = sc_pm_set_clock_rate(ipcHndl, SC_R_UART_0, SC_PM_CLK_PER, &rate);
 	if (sciErr != SC_ERR_NONE)
 		return 0;
 
-	/* Set UART0 clock root to 80 MHz */
-	sc_pm_clock_rate_t rate = 80000000;
-	sciErr = sc_pm_set_clock_rate(ipcHndl, SC_R_UART_0, 2, &rate);
+	/* Power up UART3 */
+	sciErr = sc_pm_set_resource_power_mode(ipcHndl, SC_R_UART_3, SC_PM_PW_MODE_ON);
 	if (sciErr != SC_ERR_NONE)
 		return 0;
 
-	/* Enable UART0 clock root */
-	sciErr = sc_pm_clock_enable(ipcHndl, SC_R_UART_0, 2, true, false);
+	/* Set UART3 clock root to 80 MHz */
+	rate = 80000000;
+	sciErr = sc_pm_set_clock_rate(ipcHndl, SC_R_UART_3, SC_PM_CLK_PER, &rate);
+	if (sciErr != SC_ERR_NONE)
+		return 0;
+
+	/* Enable UART3 clock root */
+	sciErr = sc_pm_clock_enable(ipcHndl, SC_R_UART_3, SC_PM_CLK_PER, true, false);
 	if (sciErr != SC_ERR_NONE)
 		return 0;
 
@@ -365,7 +378,7 @@ int board_init(void)
 void board_quiesce_devices()
 {
 	const char *power_on_devices[] = {
-		"dma_lpuart0",
+		"dma_lpuart3",
 
 		/* HIFI DSP boot */
 		"audio_sai0",

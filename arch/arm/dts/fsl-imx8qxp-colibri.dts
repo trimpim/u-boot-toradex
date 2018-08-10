@@ -25,8 +25,8 @@
 	compatible = "toradex,imx8qxp-colibri", "fsl,imx8qxp";
 
 	chosen {
-		bootargs = "console=ttyLP0,115200 earlycon=lpuart32,0x5a060000,115200";
-		stdout-path = &lpuart0;
+		bootargs = "console=ttyLP3,115200 earlycon=lpuart32,0x5a090000,115200";
+		stdout-path = &lpuart3;
 	};
 
 	regulators {
@@ -67,6 +67,13 @@
 			fsl,pins = <
 				SC_P_UART0_RX_ADMA_UART0_RX	0x06000020
 				SC_P_UART0_TX_ADMA_UART0_TX	0x06000020
+			>;
+		};
+
+		pinctrl_lpuart3: lpuart3grp {
+			fsl,pins = <
+				SC_P_FLEXCAN2_RX_ADMA_UART3_RX	0x06000020
+				SC_P_FLEXCAN2_TX_ADMA_UART3_TX	0x06000020
 			>;
 		};
 
@@ -243,6 +250,12 @@
 &lpuart0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_lpuart0>;
+	status = "disabled";
+};
+
+&lpuart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_lpuart3>;
 	status = "okay";
 };
 
