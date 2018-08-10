@@ -908,6 +908,11 @@ u-boot.bin: u-boot-nodtb.bin FORCE
 	$(call if_changed,copy)
 endif
 
+flash.bin: u-boot.bin
+	cd  mx8_boot_img; $(MAKE)
+	@echo;echo "To update an SD card use e.g.:"
+	@echo 'sudo "sudo sh -c "dd if=flash.bin of=/dev/sdX bs=1k seek=33;sync"';echo
+
 %.imx: %.bin
 	$(Q)$(MAKE) $(build)=arch/arm/mach-imx $@
 
