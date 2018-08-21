@@ -1089,6 +1089,10 @@ static void ddr_init(int *table, int size)
 		writel(table[2 * i + 1], table[2 * i]);
 }
 
+static 	struct mx6_ddr_sysinfo ddr_sysinfo = {
+	.dsize          = 2,
+};
+
 static void spl_dram_init(void)
 {
 	int minc, maxc;
@@ -1105,6 +1109,7 @@ static void spl_dram_init(void)
 #ifndef CONFIG_SPL_SILENT_CONSOLE
 			puts("Commercial temperature grade DDR3 timings, 32bit bus width.\n");
 #endif
+			ddr_sysinfo.dsize = 1;
 			ddr_init(mx6s_dcd_table, ARRAY_SIZE(mx6s_dcd_table));
 		}
 		break;
@@ -1120,11 +1125,15 @@ static void spl_dram_init(void)
 #ifndef CONFIG_SPL_SILENT_CONSOLE
 			puts("Industrial temperature grade DDR3 timings, 32bit bus width.\n");
 #endif
+			ddr_sysinfo.dsize = 1;
 			ddr_init(mx6s_dcd_table, ARRAY_SIZE(mx6s_dcd_table));
 		}
 		break;
 	};
 	udelay(100);
+	/* Perform DDR DRAM calibration */
+	mmdc_do_write_level_calibration(&ddr_sysinfo);
+	mmdc_do_dqs_calibration(&ddr_sysinfo);
 }
 
 static iomux_v3_cfg_t const gpio_reset_pad[] = {
