@@ -191,14 +191,14 @@ int mmdc_do_write_level_calibration(struct mx6_ddr_sysinfo const *sysinfo)
 	writel(esdmisc_val, &mmdc0->mdref);
 	writel(zq_val, &mmdc0->mpzqhwctrl);
 
-	debug("\tMMDC_MPWLDECTRL0 after write level cal: 0x%08X\n",
+	debug("\tMPWLDECTRL0 PHY0: 0x%08X\n",
 	      readl(&mmdc0->mpwldectrl0));
-	debug("\tMMDC_MPWLDECTRL1 after write level cal: 0x%08X\n",
+	debug("\tMPWLDECTRL1 PHY0: 0x%08X\n",
 	      readl(&mmdc0->mpwldectrl1));
 	if (sysinfo->dsize == 2) {
-		debug("\tMMDC_MPWLDECTRL0 after write level cal: 0x%08X\n",
+		debug("\tMPWLDECTRL0 PHY1: 0x%08X\n",
 		      readl(&mmdc1->mpwldectrl0));
-		debug("\tMMDC_MPWLDECTRL1 after write level cal: 0x%08X\n",
+		debug("\tMPWLDECTRL1 PHY1: 0x%08X\n",
 		      readl(&mmdc1->mpwldectrl1));
 	}
 
