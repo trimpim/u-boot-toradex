@@ -255,8 +255,6 @@ int board_eth_init(bd_t *bis)
 	int ret;
 	struct power_domain pd;
 
-	printf("[%s] %d\n", __func__, __LINE__);
-
 	if (CONFIG_FEC_ENET_DEV) {
 		if (!power_domain_lookup_name("conn_enet1", &pd))
 			power_domain_on(&pd);
@@ -426,6 +424,12 @@ int board_late_init(void)
 
 #ifdef CONFIG_ENV_IS_IN_MMC
 	board_late_mmc_env_init();
+#endif
+
+#ifdef CONFIG_AHAB_BOOT
+	setenv("sec_boot", "yes");
+#else
+	setenv("sec_boot", "no");
 #endif
 
 	return 0;

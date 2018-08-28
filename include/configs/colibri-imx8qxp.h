@@ -69,6 +69,12 @@
 	"kernel_addr_r=0x82000000\0" \
 	"ramdisk_addr_r=0x84100000\0"
 
+#ifdef CONFIG_AHAB_BOOT
+#define AHAB_ENV "sec_boot=yes\0"
+#else
+#define AHAB_ENV "sec_boot=no\0"
+#endif
+
 /* Boot M4 */
 #define M4_BOOT_ENV \
 	"m4_0_image=m4_0.bin\0" \
@@ -99,6 +105,7 @@
 #define CONFIG_EXTRA_ENV_SETTINGS		\
 	CONFIG_MFG_ENV_SETTINGS \
 	M4_BOOT_ENV \
+	AHAB_ENV \
 	MEM_LAYOUT_ENV_SETTINGS \
 	"script=boot.scr\0" \
 	"image=Image\0" \
@@ -179,7 +186,7 @@
 #define CONFIG_SYS_MEMTEST_END		0x89000000
 
 /* Default environment is in SD */
-#define CONFIG_ENV_SIZE			0x1000
+#define CONFIG_ENV_SIZE			0x2000
 
 #define CONFIG_ENV_OFFSET       (64 * SZ_64K)
 #define CONFIG_ENV_IS_IN_MMC
@@ -207,11 +214,11 @@
 
 /* Monitor Command Prompt */
 #define CONFIG_SYS_LONGHELP
-#define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
+#define CONFIG_SYS_PROMPT_HUSH_PS2	"> "
 #define CONFIG_AUTO_COMPLETE
-#define CONFIG_SYS_CBSIZE              1024
-#define CONFIG_SYS_MAXARGS             64
-#define CONFIG_SYS_BARGSIZE CONFIG_SYS_CBSIZE
+#define CONFIG_SYS_CBSIZE		2048
+#define CONFIG_SYS_MAXARGS		64
+#define CONFIG_SYS_BARGSIZE		CONFIG_SYS_CBSIZE
 #define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE + \
 					sizeof(CONFIG_SYS_PROMPT) + 16)
 #define CONFIG_CMDLINE_EDITING
