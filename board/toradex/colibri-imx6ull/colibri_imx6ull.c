@@ -166,6 +166,15 @@ static int setup_lcd(void)
 
 	return 0;
 }
+
+/*
+ * Backlight off before OS handover
+ */
+void board_preboot_os(void)
+{
+	gpio_direction_output(GPIO_PWM_A, 1);
+	gpio_direction_output(GPIO_BL_ON, 0);
+}
 #endif
 
 #ifdef CONFIG_FEC_MXC

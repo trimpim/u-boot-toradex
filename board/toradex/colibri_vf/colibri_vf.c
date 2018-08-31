@@ -42,6 +42,7 @@ DECLARE_GLOBAL_DATA_PTR;
 
 #define USB_PEN_GPIO           83
 #define USB_CDET_GPIO		102
+#define PTC0_GPIO_45		45
 
 static struct ddrmc_cr_setting colibri_vf_cr_settings[] = {
 	{ DDRMC_CR79_CTLUPD_AREF(1), 79 },
@@ -650,3 +651,12 @@ int board_usb_phy_mode(int port)
 	}
 }
 #endif
+
+/*
+ * Backlight off before OS handover
+ */
+void board_preboot_os(void)
+{
+	gpio_request(PTC0_GPIO_45, "BL_ON");
+	gpio_direction_output(PTC0_GPIO_45, 0);
+}

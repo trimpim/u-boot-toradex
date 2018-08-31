@@ -281,3 +281,12 @@ void start_cpu_fan(void)
 	gpio_request(FAN_EN, "FAN_EN");
 	gpio_direction_output(FAN_EN, 1);
 }
+
+/*
+ * Backlight off before OS handover
+ */
+void board_preboot_os(void)
+{
+	gpio_request(TEGRA_GPIO(BB, 5), "BL_ON");
+	gpio_direction_output(TEGRA_GPIO(BB, 5), 0);
+}

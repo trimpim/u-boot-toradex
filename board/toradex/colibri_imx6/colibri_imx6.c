@@ -507,8 +507,6 @@ static void enable_rgb(struct display_info_t const *dev)
 	imx_iomux_v3_setup_multiple_pads(
 		rgb_pads,
 		ARRAY_SIZE(rgb_pads));
-	gpio_direction_output(RGB_BACKLIGHT_GP, 1);
-	gpio_direction_output(RGB_BACKLIGHTPWM_GP, 0);
 }
 
 static int detect_default(struct display_info_t const *dev)
@@ -633,6 +631,15 @@ static void setup_display(void)
 	/* use 0 for EDT 7", use 1 for LG fullHD panel */
 	gpio_direction_output(RGB_BACKLIGHTPWM_GP, 0);
 	gpio_direction_output(RGB_BACKLIGHT_GP, 1);
+}
+
+/*
+ * Backlight off before OS handover
+ */
+void board_preboot_os(void)
+{
+	gpio_direction_output(RGB_BACKLIGHTPWM_GP, 1);
+	gpio_direction_output(RGB_BACKLIGHT_GP, 0);
 }
 #endif /* defined(CONFIG_VIDEO_IPUV3) */
 
