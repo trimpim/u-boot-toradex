@@ -111,7 +111,8 @@ int arch_misc_init(void)
 			setenv("leb-size", "504KiB");
 			break;
 		default:
-			printf("Failed detecting NAND block erase size.\n");
+			printf("Failed detecting NAND block erase size "
+			       "(%d KiB).\n", nand_info[0]->erasesize >> 10);
 		}
 	}
 

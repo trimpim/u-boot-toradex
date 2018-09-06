@@ -170,7 +170,8 @@ static void read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
 	int i, s;
 	unsigned int reg;
 	struct nand_chip *chip = mtd_to_nand(mtd);
-	struct nand_drv *info = (struct nand_drv *)nand_get_controller_data(chip);
+	struct nand_drv *info =
+			(struct nand_drv *)nand_get_controller_data(chip);
 
 	for (i = 0; i < len; i += 4) {
 		s = (len - i) > 4 ? 4 : len - i;
@@ -545,8 +546,16 @@ static int nand_rw_page(struct mtd_info *mtd, struct nand_chip *chip,
 			tag_size += SKIPPED_SPARE_BYTES;
 		bounce_buffer_start(&bbstate_oob, (void *)tag_ptr, tag_size,
 				    bbflags);
-		writel(virt_to_phys(bbstate_oob.bounce_buffer), &info->reg->tag_ptr);
-		writel(BCH_CONFIG_BCH_TVAL16 | BCH_CONFIG_BCH_ECC_ENABLE, &info->reg->bch_config);
+		writel(virt_to_phys(bbstate_oob.bounce_buffer),
+		       &info->reg->tag_ptr);
+		/*
+		 * TBD: We should really check whether or not enough OOB is
+		 * actually available for such configuration resp. properly
+		 * choose a configuration which actually works (see e.g.
+		 * current mainline Linux kernel driver).
+		 */
+		writel(BCH_CONFIG_BCH_TVAL16 | BCH_CONFIG_BCH_ECC_ENABLE,
+		       &info->reg->bch_config);
 	} else {
 		tag_size = mtd->oobsize;
 		reg_val |= (CFG_SKIP_SPARE_DISABLE
@@ -556,7 +565,8 @@ static int nand_rw_page(struct mtd_info *mtd, struct nand_chip *chip,
 			| (tag_size - 1));
 		bounce_buffer_start(&bbstate_oob, (void *)chip->oob_poi,
 				    tag_size, bbflags);
-		writel(virt_to_phys(bbstate_oob.bounce_buffer), &info->reg->tag_ptr);
+		writel(virt_to_phys(bbstate_oob.bounce_buffer),
+		       &info->reg->tag_ptr);
 		writel(BCH_CONFIG_BCH_ECC_DISABLE, &info->reg->bch_config);
 	}
 	writel(reg_val, &info->reg->config);
