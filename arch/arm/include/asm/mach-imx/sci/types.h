@@ -763,7 +763,9 @@
 #define SC_C_RST0                       43U
 #define SC_C_RST1                       44U
 #define SC_C_SEL0                       45U
-#define SC_C_LAST                       46U
+#define SC_C_PMIC_I2C                   46U
+#define SC_C_PMIC_I2C_READ_REG          47U
+#define SC_C_LAST                       48U
 
 #define SC_P_ALL        ((sc_pad_t) UINT16_MAX)   /*!< All pads */
 
