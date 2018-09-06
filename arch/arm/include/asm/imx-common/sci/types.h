@@ -773,7 +773,9 @@
 #define SC_C_IPG_STOP                   52U
 #define SC_C_IPG_STOP_MODE              53U
 #define SC_C_IPG_STOP_ACK               54U
-#define SC_C_LAST                       55U
+#define SC_C_PMIC_I2C                   55U
+#define SC_C_PMIC_I2C_READ_REG          56U
+#define SC_C_LAST                       57U
 
 #define SC_P_ALL        ((sc_pad_t) UINT16_MAX)   /*!< All pads */
 
