@@ -105,6 +105,26 @@ sc_err_t sc_pm_set_resource_power_mode(sc_ipc_t ipc, sc_rsrc_t resource,
     return (sc_err_t) result;
 }
 
+sc_err_t sc_pm_set_resource_power_mode_all(sc_ipc_t ipc,
+    sc_rm_pt_t pt, sc_pm_power_mode_t mode, sc_rsrc_t exclude)
+{
+    sc_rpc_msg_t msg;
+    uint8_t result;
+
+    RPC_VER(&msg) = SC_RPC_VERSION;
+    RPC_SVC(&msg) = (uint8_t) SC_RPC_SVC_PM;
+    RPC_FUNC(&msg) = (uint8_t) PM_FUNC_SET_RESOURCE_POWER_MODE_ALL;
+    RPC_U16(&msg, 0U) = (uint16_t) exclude;
+    RPC_U8(&msg, 2U) = (uint8_t) pt;
+    RPC_U8(&msg, 3U) = (uint8_t) mode;
+    RPC_SIZE(&msg) = 2U;
+
+    sc_call_rpc(ipc, &msg, SC_FALSE);
+
+    result = RPC_R8(&msg);
+    return (sc_err_t) result;
+}
+
 sc_err_t sc_pm_get_resource_power_mode(sc_ipc_t ipc, sc_rsrc_t resource,
     sc_pm_power_mode_t *mode)
 {

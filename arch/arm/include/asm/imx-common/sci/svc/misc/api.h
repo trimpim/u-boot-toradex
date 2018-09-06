@@ -30,7 +30,7 @@
  * @name Defines for type widths
  */
 /*@{*/
-#define SC_MISC_DMA_GRP_W       5       /*!< Width of sc_misc_dma_group_t */
+#define SC_MISC_DMA_GRP_W       5U      /*!< Width of sc_misc_dma_group_t */
 /*@}*/
 
 /*! Max DMA channel priority group */
@@ -320,6 +320,18 @@ sc_err_t sc_misc_seco_return_lifecycle(sc_ipc_t ipc, sc_faddr_t addr);
  */
 void sc_misc_seco_build_info(sc_ipc_t ipc, uint32_t *version,
     uint32_t *commit);
+
+/*!
+ * This function is used to return SECO chip info.
+ *
+ * @param[in]     ipc         IPC handle
+ * @param[out]    lc          pointer to return lifecycle
+ * @param[out]    monotonic   pointer to return monotonic counter
+ * @param[out]    uid_l       pointer to return UID (lower 32 bits)
+ * @param[out]    uid_h       pointer to return UID (upper 32 bits)
+ */
+sc_err_t sc_misc_seco_chip_info(sc_ipc_t ipc, uint16_t *lc,
+    uint16_t *monotonic, uint32_t *uid_l, uint32_t *uid_h);
 
 /* @} */
 

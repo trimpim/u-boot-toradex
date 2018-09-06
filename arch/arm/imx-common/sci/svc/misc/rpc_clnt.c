@@ -248,6 +248,43 @@ void sc_misc_seco_build_info(sc_ipc_t ipc, uint32_t *version,
     return;
 }
 
+sc_err_t sc_misc_seco_chip_info(sc_ipc_t ipc, uint16_t *lc,
+    uint16_t *monotonic, uint32_t *uid_l, uint32_t *uid_h)
+{
+    sc_rpc_msg_t msg;
+    uint8_t result;
+
+    RPC_VER(&msg) = SC_RPC_VERSION;
+    RPC_SVC(&msg) = (uint8_t) SC_RPC_SVC_MISC;
+    RPC_FUNC(&msg) = (uint8_t) MISC_FUNC_SECO_CHIP_INFO;
+    RPC_SIZE(&msg) = 1U;
+
+    sc_call_rpc(ipc, &msg, SC_FALSE);
+
+    if (uid_l != NULL)
+    {
+        *uid_l = RPC_U32(&msg, 0U);
+    }
+
+    if (uid_h != NULL)
+    {
+        *uid_h = RPC_U32(&msg, 4U);
+    }
+
+    if (lc != NULL)
+    {
+        *lc = RPC_U16(&msg, 8U);
+    }
+
+    if (monotonic != NULL)
+    {
+        *monotonic = RPC_U16(&msg, 10U);
+    }
+
+    result = RPC_R8(&msg);
+    return (sc_err_t) result;
+}
+
 void sc_misc_debug_out(sc_ipc_t ipc, uint8_t ch)
 {
     sc_rpc_msg_t msg;
@@ -433,7 +470,7 @@ sc_err_t sc_misc_set_temp(sc_ipc_t ipc, sc_rsrc_t resource,
     RPC_SVC(&msg) = (uint8_t) SC_RPC_SVC_MISC;
     RPC_FUNC(&msg) = (uint8_t) MISC_FUNC_SET_TEMP;
     RPC_U16(&msg, 0U) = (uint16_t) resource;
-    RPC_I16(&msg, 2U) = (uint16_t) celsius;
+    RPC_I16(&msg, 2U) = (int16_t) celsius;
     RPC_U8(&msg, 4U) = (uint8_t) temp;
     RPC_I8(&msg, 5U) = (int8_t) tenths;
     RPC_SIZE(&msg) = 3U;

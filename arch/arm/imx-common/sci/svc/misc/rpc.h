@@ -35,6 +35,7 @@
 #define MISC_FUNC_SECO_FORWARD_LIFECYCLE 22U /*!< Index for misc_seco_forward_lifecycle() RPC call */
 #define MISC_FUNC_SECO_RETURN_LIFECYCLE 23U /*!< Index for misc_seco_return_lifecycle() RPC call */
 #define MISC_FUNC_SECO_BUILD_INFO 24U /*!< Index for misc_seco_build_info() RPC call */
+#define MISC_FUNC_SECO_CHIP_INFO 25U /*!< Index for misc_seco_chip_info() RPC call */
 #define MISC_FUNC_DEBUG_OUT 10U /*!< Index for misc_debug_out() RPC call */
 #define MISC_FUNC_WAVEFORM_CAPTURE 6U /*!< Index for misc_waveform_capture() RPC call */
 #define MISC_FUNC_BUILD_INFO 15U /*!< Index for misc_build_info() RPC call */
