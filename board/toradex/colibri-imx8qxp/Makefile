@@ -5,3 +5,4 @@
 #
 
 obj-y += colibri-imx8qxp.o
+obj-$(CONFIG_TDX_CMD_IMX_MFGR)  += pf8100.o
