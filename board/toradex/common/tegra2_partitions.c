@@ -156,7 +156,7 @@ void nvtegra_print_partition_table(nvtegra_parttable_t * pt)
 int nvtegra_read_partition_table(nvtegra_parttable_t * pt, int boot_media)
 {
 	size_t size;
-	int i;
+	int i, j;
 	nvtegra_partinfo_t *p;
 	u32 bct_start, pt_logical = 0, pt_offset;
 
@@ -271,13 +271,24 @@ int nvtegra_read_partition_table(nvtegra_parttable_t * pt, int boot_media)
 	size = sizeof(nvtegra_parttable_t);
 #ifdef CONFIG_COLIBRI_T20
 	if (boot_media == 0) {
-		i = nand_read_skip_bad(&nand_info[0], pt_offset, &size,
-				       (unsigned char *)pt);
-		if ((i != 0) || (size != sizeof(nvtegra_parttable_t))) {
-			printf("%s: Error! nand_read_skip_bad failed. "
-			       "block_size=%d ret=%d\n",
-			       __FUNCTION__, block_size, i);
-			return 0;
+		/* badblock may cause drift */
+		for (j = 0; j < 16; j++) {
+			i = nand_read_skip_bad(&nand_info[0], pt_offset, &size,
+					       (unsigned char *)pt);
+			if ((i != 0) || (size != sizeof(nvtegra_parttable_t))) {
+				printf("%s: Error! nand_read_skip_bad failed. "
+				       "block_size=%d ret=%d\n",
+				       __FUNCTION__, block_size, i);
+				return 0;
+			}
+
+			/* some heuristics */
+			p = &(pt->partinfo[0]);
+			if ((p->id == 2) && !memcmp(p->name, "BCT\0", 4) && !memcmp(p->name2, "BCT\0", 4) && (p->virtual_start_sector == 0))
+				break;
+
+			/* skip block and try again */
+			pt_offset+=nand_info->erasesize;
 		}
 	}
 #endif /* CONFIG_COLIBRI_T20 */
@@ -303,6 +314,7 @@ int nvtegra_read_partition_table(nvtegra_parttable_t * pt, int boot_media)
 
 	/* some heuristics */
 	p = &(pt->partinfo[0]);
+	p->name[3] = '\0'; /* avoid buffer overflow */
 	if ((p->id != 2) || memcmp(p->name, "BCT\0", 4)
 	    || memcmp(p->name2, "BCT\0", 4) || (p->virtual_start_sector != 0)) {
 		printf("%s: Error! Partition table offset is probably "
