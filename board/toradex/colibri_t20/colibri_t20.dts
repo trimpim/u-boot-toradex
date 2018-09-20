@@ -169,9 +169,10 @@
 		timing = <12 100 20 80 20 10 12 10 70>;
 	};
 
-	/* Colibri T20 256MB V1.2a new */
+	/* Colibri T20 256MB V1.2a new and Colibri T20 256MB IT V1.2b */
 	flash2@0x70008000 {
-		compatible = "micron,MT29F4G08ABBEAH4", "2C,AC,26";
+		compatible = "micron,MT29F4G08ABBEAH4", "2C,AC,26",
+			     "micron,MT29F4G08ABBFAH4";
 		controller = <&nand>;
 		page-data-bytes = <4096>;
 		tag-ecc-bytes = <9>;
@@ -179,10 +180,10 @@
 		data-ecc-bytes = <72>;
 		skipped-spare-bytes = <4>;
 		page-spare-bytes = <128>;
-		timing = <15 100 25 80 25 10 15 10 100>;
+		timing = <20 100 25 80 25 10 15 10 100>;
 	};
 
-	/* Colibri T20 before V1.1x aka old */
+	/* Colibri T20 V1.1 aka old */
 	flash3@0x70008000 {
 		compatible = "micron,MT29F8G08ABCBB", "2C,38,26";
 		controller = <&nand>;
@@ -232,6 +233,45 @@
 		skipped-spare-bytes = <4>;
 		page-spare-bytes = <64>;
 		timing = <20 100 20 60 20 10 12 10 70>;
+	};
+
+	/* Colibri T20 256MB IT V1.2b */
+	flash7@0x70008000 {
+		compatible = "toshiba,TC58NYG2S0HBAI4", "98,AC,26";
+		controller = <&nand>;
+		page-data-bytes = <4096>;
+		tag-ecc-bytes = <9>;
+		tag-bytes = <48>;
+		data-ecc-bytes = <72>;
+		skipped-spare-bytes = <4>;
+		page-spare-bytes = <128>;
+		timing = <26 100 20 60 20 10 12 10 70>;
+	};
+
+	/* Colibri T20 256MB IT V1.2b */
+	flash8@0x70008000 {
+		compatible = "issi,IS34MW04G084", "C8,AC,15";
+		controller = <&nand>;
+		page-data-bytes = <2048>;
+		tag-ecc-bytes = <9>;
+		tag-bytes = <48>;
+		data-ecc-bytes = <72>;
+		skipped-spare-bytes = <4>;
+		page-spare-bytes = <64>;
+		timing = <36 100 35 60 35 15 25 15 100>;
+	};
+
+	/* Colibri T20 512MB IT V1.2b */
+	flash9@0x70008000 {
+		compatible = "toshiba,TH58NYG3S0HBAI4", "98,A3,26";
+		controller = <&nand>;
+		page-data-bytes = <4096>;
+		tag-ecc-bytes = <9>;
+		tag-bytes = <48>;
+		data-ecc-bytes = <72>;
+		skipped-spare-bytes = <4>;
+		page-spare-bytes = <128>;
+		timing = <26 100 20 60 20 10 12 10 70>;
 	};
 
 	nand-controller@0x70008000 {
