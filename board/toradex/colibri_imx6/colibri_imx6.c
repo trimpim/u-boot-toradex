@@ -1134,11 +1134,13 @@ static iomux_v3_cfg_t const gpio_reset_pad[] = {
 
 static void nreset_out(void) {
 
-	#define IMX_RESET_CAUSE_POR 0x00011
+	#define IMX_RESET_CAUSE_POR_MASK 0x00001
 	int reset_cause;
-	reset_cause = get_imx_reset_cause();
 
-	if (reset_cause != IMX_RESET_CAUSE_POR) {
+	struct src *src_regs = (struct src *)SRC_BASE_ADDR;
+	reset_cause = readl(&src_regs->srsr);
+
+	if (!(reset_cause & IMX_RESET_CAUSE_POR_MASK)) {
 		imx_iomux_v3_setup_multiple_pads(gpio_reset_pad,
 					 ARRAY_SIZE(gpio_reset_pad));
 		gpio_direction_output(GPIO_NRESET, 1);
