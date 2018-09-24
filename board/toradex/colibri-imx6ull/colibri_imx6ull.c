@@ -281,6 +281,9 @@ int board_eth_init(bd_t *bis)
 
 	setup_iomux_fec();
 
+	/* give new Ethernet PHY power save mode circuitry time to settle */
+	mdelay(300);
+
 	ret = fecmxc_initialize_multi(bis, 0,
 		CONFIG_FEC_MXC_PHYADDR, IMX_FEC_BASE);
 	if (ret)
