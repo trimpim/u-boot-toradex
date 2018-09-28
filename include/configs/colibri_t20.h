@@ -120,9 +120,9 @@
 		"rootwait\0" \
 	"sdboot=run setup; setenv bootargs ${defargs} ${mtdparts} ${sdargs} " \
 		"${setupargs} ${vidargs}; echo Booting from SD card...; " \
-		"run sddtbload; load mmc 1:1 ${kernel_addr_r} ${boot_file} " \
+		"run sddtbload; load mmc 0:1 ${kernel_addr_r} ${boot_file} " \
 		"&& run fdt_fixup && bootz ${kernel_addr_r} - ${dtbparam}\0" \
-	"sddtbload=setenv dtbparam; load mmc 1:1 ${fdt_addr_r} " \
+	"sddtbload=setenv dtbparam; load mmc 0:1 ${fdt_addr_r} " \
 		"${soc}-colibri-${fdt_board}.dtb " \
 		"&& setenv dtbparam ${fdt_addr_r}\0"
 
