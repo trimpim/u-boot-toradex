@@ -126,13 +126,11 @@
 		"&& setenv dtbparam ${fdt_addr_r}\0"
 
 #define SD_BOOTCMD \
-	"sdargs=ip=off root=/dev/mmcblk1p2 ro rootfstype=ext3 " \
-		"rootwait\0" \
+	"sdargs=ip=off root=/dev/mmcblk1p2 ro rootfstype=ext3 rootwait\0" \
 	"sdboot=run setup; setenv bootargs ${defargs} ${sdargs} ${setupargs} " \
-		"${vidargs}; echo Booting from SD card in 8bit slot...; " \
-		"run sddtbload; load mmc 1:1 ${kernel_addr_r} " \
-		"${boot_file} && run fdt_fixup && " \
-		"bootz ${kernel_addr_r} - ${dtbparam}\0" \
+		"${vidargs}; echo Booting from MMC/SD card in 8-bit slot...; " \
+		"run sddtbload; load mmc 1:1 ${kernel_addr_r} ${boot_file} " \
+		"&& run fdt_fixup && bootz ${kernel_addr_r} - ${dtbparam}\0" \
 	"sddtbload=setenv dtbparam; load mmc 1:1 ${fdt_addr_r} " \
 		"${soc}-apalis-${fdt_board}.dtb " \
 		"&& setenv dtbparam ${fdt_addr_r}\0"

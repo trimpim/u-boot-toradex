@@ -83,16 +83,15 @@
 		"${setupargs} ${vidargs}; echo Booting from NFS...;" \
 		"dhcp ${kernel_addr_r} && " \
 		"tftp ${fdt_addr_r} ${soc}-colibri-${fdt_board}.dtb && " \
-		"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0" \
+		"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0"
 
 #define SD_BOOTCMD \
 	"sdargs=root=/dev/mmcblk0p2 ro rootwait\0" \
-	"sdboot=run setup; setenv bootargs ${defargs} ${sdargs} " \
-	"${setupargs} ${vidargs}; echo Booting from MMC/SD card...; " \
-	"run m4boot && " \
-	"load mmc 0:1 ${kernel_addr_r} ${kernel_file} && " \
-	"load mmc 0:1 ${fdt_addr_r} ${soc}-colibri-${fdt_board}.dtb && " \
-	"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0" \
+	"sdboot=run setup; setenv bootargs ${defargs} ${sdargs} ${setupargs} " \
+		"${vidargs}; echo Booting from MMC/SD card...; run m4boot && " \
+		"load mmc 0:1 ${kernel_addr_r} ${kernel_file} && " \
+		"load mmc 0:1 ${fdt_addr_r} ${soc}-colibri-${fdt_board}.dtb " \
+		"&& run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0"
 
 #define UBI_BOOTCMD \
 	"ubiargs=ubi.mtd=ubi root=ubi0:rootfs rootfstype=ubifs " \
@@ -103,7 +102,7 @@
 		"ubi part ubi && run m4boot && " \
 		"ubi read ${kernel_addr_r} kernel && " \
 		"ubi read ${fdt_addr_r} dtb && " \
-		"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0" \
+		"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0"
 
 #define CONFIG_BOOTCOMMAND "run ubiboot; " \
 	"setenv fdtfile ${soc}-colibri-${fdt_board}.dtb && run distro_bootcmd"
