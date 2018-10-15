@@ -482,7 +482,7 @@ int checkboard(void)
 #if defined(CONFIG_IMX_BOOTAUX)
 ulong board_get_usable_ram_top(ulong total_size)
 {
-	/* Reserve last 1MiB for M4 on modules with 256MiB RAM */
+	/* Reserve last 2MiB for M4 on modules with 256MiB RAM */
 	if (gd->ram_size == SZ_256M)
 		return gd->ram_top - SZ_2M;
 	else
@@ -512,7 +512,7 @@ int ft_board_setup(void *blob, bd_t *bd)
 		u64 start[2], size[2];
 
 		/*
-		 * Reserve 1MB of memory for M4 (1MiB is also the minimum
+		 * Reserve 2MiB of memory for M4 (2MiB is also the minimum
 		 * alignment for Linux due to MMU section size restrictions).
 		 */
 		start[0] = gd->bd->bi_dram[0].start;
