@@ -358,6 +358,7 @@ int board_init(void)
 	 */
 	imx_iomux_v3_setup_multiple_pads(flash_detection_pads, ARRAY_SIZE(flash_detection_pads));
 	gpio_request(FLASH_DET_GPIO, "flash-detection-gpio");
+	gpio_direction_input(FLASH_DET_GPIO);
 	is_emmc = gpio_get_value(FLASH_DET_GPIO);
 	gpio_free(FLASH_DET_GPIO);
 
