@@ -436,9 +436,27 @@ static int ksz9031_of_config(struct phy_device *phydev)
 {
 	return 0;
 }
-static int ksz9031_center_flp_timing(struct phy_device *phydev)
+int ksz9031_center_flp_timing(struct phy_device *phydev)
 {
-	return 0;
+	struct phy_driver *drv = phydev->drv;
+	int ret = 0;
+
+	if (!drv || !drv->writeext)
+		return -EOPNOTSUPP;
+
+	ret = drv->writeext(phydev, 0, 0, MII_KSZ9031_FLP_BURST_TX_LO, 0x1A80);
+	if (ret) {
+		puts("Write failed");
+		return ret;
+	}
+
+	ret = drv->writeext(phydev, 0, 0, MII_KSZ9031_FLP_BURST_TX_HI, 0x6);
+	if (ret) {
+		puts("Write failed");
+		return ret;
+	}
+
+	return genphy_restart_aneg(phydev);
 }
 #endif
 

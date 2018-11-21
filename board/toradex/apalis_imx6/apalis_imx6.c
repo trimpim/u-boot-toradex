@@ -480,6 +480,8 @@ int board_mmc_init(bd_t *bis)
 
 int board_phy_config(struct phy_device *phydev)
 {
+	ksz9031_center_flp_timing(phydev);
+
 	mx6_rgmii_rework(phydev);
 	if (phydev->drv->config)
 		phydev->drv->config(phydev);
