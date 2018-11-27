@@ -108,6 +108,7 @@
 #define CONFIG_IP_DEFRAG
 #define CONFIG_TFTP_BLOCKSIZE		4096
 #define CONFIG_TFTP_TSIZE
+#define PHY_ANEG_TIMEOUT		10000 /* PHY needs longer aneg time */
 
 /* USB Configs */
 /* Host */
