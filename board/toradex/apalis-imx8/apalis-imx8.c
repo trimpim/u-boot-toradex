@@ -420,7 +420,7 @@ void detail_board_ddr_info(void)
  */
 void reset_cpu(ulong addr)
 {
-	puts("SCI reboot request");
+	puts("SCI reboot request\n");
 	sc_pm_reboot(SC_IPC_CH, SC_PM_RESET_TYPE_COLD);
 	while (1)
 		putc('.');
