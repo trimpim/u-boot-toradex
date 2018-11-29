@@ -232,16 +232,13 @@
 #define CONFIG_BAUDRATE			115200
 
 /* Monitor Command Prompt */
-#define CONFIG_SYS_LONGHELP
 #define CONFIG_HUSH_PARSER
 #define CONFIG_SYS_PROMPT_HUSH_PS2     "> "
-#define CONFIG_AUTO_COMPLETE
 #define CONFIG_SYS_CBSIZE              1024
 #define CONFIG_SYS_MAXARGS             64
 #define CONFIG_SYS_BARGSIZE CONFIG_SYS_CBSIZE
 #define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE + \
 					sizeof(CONFIG_SYS_PROMPT) + 16)
-#define CONFIG_CMDLINE_EDITING
 
 /* Generic Timer Definitions */
 #define COUNTER_FREQUENCY		8000000	/* 8MHz */
@@ -265,11 +262,6 @@
 #ifdef CONFIG_CMD_USB
 #define CONFIG_USB_MAX_CONTROLLER_COUNT 2
 
-/* USB 3.0 controller configs */
-#ifdef CONFIG_USB_XHCI_IMX8
-#define CONFIG_SYS_USB_XHCI_MAX_ROOT_PORTS	2
-#endif
-
 /* USB OTG controller configs */
 #ifdef CONFIG_USB_EHCI_HCD
 #define CONFIG_USB_HOST_ETHER
@@ -280,7 +272,6 @@
 
 #ifdef CONFIG_USB_GADGET
 #define CONFIG_USBD_HS
-#define CONFIG_USB_FUNCTION_MASS_STORAGE
 #endif
 
 #if defined(CONFIG_ANDROID_SUPPORT)

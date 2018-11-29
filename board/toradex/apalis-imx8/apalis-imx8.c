@@ -9,7 +9,6 @@
 #include <netdev.h>
 #include <fsl_ifc.h>
 #include <fdt_support.h>
-#include <libfdt.h>
 #include <environment.h>
 #include <fsl_esdhc.h>
 #include <i2c.h>
@@ -17,14 +16,15 @@
 #include <asm/io.h>
 #include <asm/gpio.h>
 #include <asm/arch/clock.h>
-#include <asm/imx-common/sci/sci.h>
+#include <asm/mach-imx/sci/sci.h>
 #include <asm/arch/imx8-pins.h>
 #include <dm.h>
 #include <imx8_hsio.h>
+#include <linux/libfdt.h>
 #include <usb.h>
 #include <asm/arch/iomux.h>
 #include <asm/arch/sys_proto.h>
-#include <asm/imx-common/video.h>
+#include <asm/mach-imx/video.h>
 #include <asm/arch/video_common.h>
 #include <power-domain.h>
 
@@ -440,7 +440,7 @@ int mmc_map_to_kernel_blk(int dev_no)
 
 static int check_mmc_autodetect(void)
 {
-	char *autodetect_str = getenv("mmcautodetect");
+	char *autodetect_str = env_get("mmcautodetect");
 
 	if ((autodetect_str != NULL) &&
 		(strcmp(autodetect_str, "yes") == 0)) {
@@ -459,12 +459,12 @@ void board_late_mmc_env_init(void)
 	if (!check_mmc_autodetect())
 		return;
 
-	setenv_ulong("mmcdev", dev_no);
+	env_set_ulong("mmcdev", dev_no);
 
 	/* Set mmcblk env */
 	sprintf(mmcblk, "/dev/mmcblk%dp2 rootwait rw",
 		mmc_map_to_kernel_blk(dev_no));
-	setenv("mmcroot", mmcblk);
+	env_set("mmcroot", mmcblk);
 
 	sprintf(cmd, "mmc dev %d", dev_no);
 	run_command(cmd, 0);
@@ -473,8 +473,8 @@ void board_late_mmc_env_init(void)
 int board_late_init(void)
 {
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
-	setenv("board_name", "ARM2");
-	setenv("board_rev", "iMX8QM");
+	env_set("board_name", "ARM2");
+	env_set("board_rev", "iMX8QM");
 #endif
 
 #ifdef CONFIG_ENV_IS_IN_MMC
