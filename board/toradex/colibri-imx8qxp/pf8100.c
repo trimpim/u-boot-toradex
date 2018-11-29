@@ -10,7 +10,7 @@
 
 #include <common.h>
 #include <i2c.h>
-#include <asm/imx-common/sci/sci.h>
+#include <asm/mach-imx/sci/sci.h>
 #include <asm/arch/imx8-pins.h>
 #include <asm/gpio.h>
 #include <asm/arch/iomux.h>

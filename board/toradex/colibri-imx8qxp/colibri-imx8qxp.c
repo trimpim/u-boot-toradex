@@ -9,7 +9,6 @@
 #include <netdev.h>
 #include <fsl_ifc.h>
 #include <fdt_support.h>
-#include <libfdt.h>
 #include <environment.h>
 #include <fsl_esdhc.h>
 #include <i2c.h>
@@ -17,14 +16,15 @@
 #include <asm/io.h>
 #include <asm/gpio.h>
 #include <asm/arch/clock.h>
-#include <asm/imx-common/sci/sci.h>
+#include <asm/mach-imx/sci/sci.h>
 #include <asm/arch/imx8-pins.h>
 #include <dm.h>
 #include <imx8_hsio.h>
+#include <linux/libfdt.h>
 #include <usb.h>
 #include <asm/arch/iomux.h>
 #include <asm/arch/sys_proto.h>
-#include <asm/imx-common/video.h>
+#include <asm/mach-imx//video.h>
 #include <asm/arch/video_common.h>
 #include <power-domain.h>
 
@@ -418,8 +418,8 @@ int board_late_init(void)
 {
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 /* TODO move to common */
-	setenv("board_name", "Colibri iMX8QXP");
-	setenv("board_rev", "v1.0");
+	env_set("board_name", "Colibri iMX8QXP");
+	env_set("board_rev", "v1.0");
 #endif
 
 #ifdef CONFIG_ENV_IS_IN_MMC
@@ -427,9 +427,9 @@ int board_late_init(void)
 #endif
 
 #ifdef CONFIG_AHAB_BOOT
-	setenv("sec_boot", "yes");
+	env_set("sec_boot", "yes");
 #else
-	setenv("sec_boot", "no");
+	env_set("sec_boot", "no");
 #endif
 
 	return 0;
