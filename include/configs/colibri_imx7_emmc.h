@@ -78,9 +78,18 @@
 		"load mmc 0:1 ${kernel_addr_r} ${boot_file} && " \
 		"run fdt_fixup && bootz ${kernel_addr_r} - ${fdt_addr_r}\0"
 
+#ifdef CONFIG_TDX_EASY_INSTALLER
+#define FDT_HIGH_SETTING \
+	""
+#else
+#define FDT_HIGH_SETTING \
+	"fdt_high=0xffffffff\0"
+#endif
+
 #define MEM_LAYOUT_ENV_SETTINGS \
 	"bootm_size=0x10000000\0" \
 	"fdt_addr_r=0x82000000\0" \
+	FDT_HIGH_SETTING \
 	"initrd_high=0xffffffff\0" \
 	"kernel_addr_r=0x81000000\0" \
 	"pxefile_addr_r=0x87100000\0" \
