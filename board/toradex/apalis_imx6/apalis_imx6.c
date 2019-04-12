@@ -1198,6 +1198,9 @@ static void gpr_init(void)
 	/* set IPU AXI-id0 Qos=0xf(bypass) AXI-id1 Qos=0x7 */
 	writel(0x007F007F, &iomux->gpr[6]);
 	writel(0x007F007F, &iomux->gpr[7]);
+	
+	/* enable the TZASC */
+	writel(0x00000003, &iomux->gpr[9]);
 }
 
 static void ddr_init(int *table, int size)
